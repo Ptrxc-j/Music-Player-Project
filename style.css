@@ -1,0 +1,865 @@
+/* ==========================================
+    1. STYLES
+   ========================================== */
+:root {
+    --bg-color: #f4f7f6;
+    --sidebar-color: rgba(173, 215, 228, 0.5); 
+    --text-primary: #212529;
+    --text-secondary: #555555;
+    --accent: #00796b; 
+    --panel-bg: rgba(255, 255, 255, 0.4);
+    --scrollbar-track: rgba(0, 0, 0, 0.05);   
+    --scrollbar-thumb: rgba(0, 0, 0, 0.2);    
+    --scrollbar-hover: var(--accent);         
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden; 
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ==========================================
+    2. MAIN LAYOUT & BACKGROUND
+   ========================================== */
+#bg-wallpaper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.8s ease-in-out;
+    filter: blur(15px) brightness(0.8); 
+}
+
+.app-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 280px; 
+    grid-template-rows: 1fr 100px;
+    height: 100vh;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05) !important; 
+    backdrop-filter: blur(5px); 
+}
+
+/* ==========================================
+    3. SIDEBAR
+   ========================================== */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    height: 100%;
+    background: rgba(255, 255, 255, 0.65) !important; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: center;   
+    align-items: center;      
+    width: 100%;
+    padding: 20px 0;
+    margin-bottom: 25px;
+}
+
+.sidebar-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;                                
+    text-align: center;
+}
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;                                
+}
+
+.logo-text {
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #121212;           
+    transition: color 0.3s ease;
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: #00c49f;            
+}
+
+.sidebar-section {
+    margin-top: 30px;
+    flex-grow: 1; 
+}
+
+.section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.6;
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin-top: 2rem;
+}
+
+.sidebar li {
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: #333;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar li:hover {
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--accent);
+}
+
+.playlist-list {
+    list-style: none;
+}
+
+.playlist-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.playlist-list li:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.active-list {
+    background: rgba(0, 121, 107, 0.1) !important;
+    color: var(--accent) !important;
+    font-weight: 600;
+    border-left: 4px solid var(--accent);
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    background: var(--accent);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.user-meta {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-meta .name { font-size: 0.85rem; font-weight: 600; }
+.user-meta .status { font-size: 0.7rem; opacity: 0.6; }
+
+/* ==========================================
+    4. CONTENT & SONG LIST
+   ========================================== */
+.content {
+    padding: 2rem;
+    overflow-y: auto;
+    background: transparent !important;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-box span {
+    color: var(--text-secondary);
+    margin-right: 10px;
+}
+
+#search-input {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+}
+
+#search-input::placeholder {
+    color: rgba(120, 120, 120, 0.5);
+}
+
+.dark-mode #search-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.song-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 16px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.song-details {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    flex-grow: 1;           
+}
+
+.song-item:hover {
+    transform: translateX(8px);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.song-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.now-playing-tag {
+    color: #1db954; 
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.add-to-playlist {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-to-playlist:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+.scrollable-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+    5. INFO PANEL (RIGHT SIDE)
+   ========================================== */
+.info-panel {
+    background: rgba(255, 255, 255, 0.65) !important; 
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important; 
+    border-left: 1px solid rgba(0, 0, 0, 0.1) !important;
+    max-width: 320px; 
+    width: 100%;
+    max-height: calc(100vh - 100px); 
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.track-details {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.track-details h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 25px; 
+    letter-spacing: 0.5px;
+}
+
+.info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;          
+    margin-top: 20px;
+    margin-bottom: 35px; 
+    padding: 0 10px;    
+}
+
+.info-box p {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+    margin: 8px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.info-box p strong {
+    font-weight: 500;
+    width: 110px; 
+    display: inline-block;
+    flex-shrink: 0; 
+}
+
+body:not(.dark-mode) .info-box p strong {
+    color: rgba(0, 0, 0, 0.6); 
+}
+
+.info-box span {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9); 
+    padding-left: 5px; 
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px; 
+}
+
+.queue-container {
+    padding: 0 15px;
+}
+
+.queue-container h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#up-next-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 380px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.next-song-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.next-art-thumb {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    object-fit: cover; 
+    flex-shrink: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.next-meta {
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.next-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 2px;
+}
+
+.next-artist {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+/* ==========================================
+    6. PLAYBAR LAYOUT  
+   ========================================== */
+.player-bar {
+    grid-column: span 3;
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 10;
+    height: 100px; 
+}
+
+/* LEFT SIDE BAR BLOCK */
+.now-playing {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 280px;      
+    min-width: 280px;  
+    max-width: 280px;  
+    height: 100%; 
+    overflow: hidden;
+}
+
+#current-art {
+    width: 55px;
+    height: 55px;
+    min-width: 55px; 
+    border-radius: 8px;
+    object-fit: cover; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.now-playing .text-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.now-playing h4, 
+.now-playing p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.controls {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 12px;
+}
+
+.buttons {
+    display: flex;
+    gap: 40px; 
+    align-items: center;
+}
+
+.control-btn {
+    background: none !important;
+    border: none !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.control-btn .material-symbols-outlined {
+    font-size: 26px;
+    color: var(--text-color, #222222);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.control-btn:hover .material-symbols-outlined {
+    color: #00a884 !important;
+    transform: scale(1.15);
+}
+
+/* Toggle configs */
+.active-toggle {
+    color: #00e676 !important; 
+    text-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+    transform: scale(1.05);
+}
+
+.control-btn.active-toggle .material-symbols-outlined {
+    color: #00a884 !important;
+}
+
+/* Primary Playback buttons */
+.main-play-btn {
+    background: none !important;
+    border: none !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.main-play-btn:hover {
+    transform: scale(1.08);
+}
+
+#play-pause-btn .material-symbols-outlined {
+    font-size: 55px; 
+    color: var(--accent);
+}
+
+.seeker-wrapper {
+    width: 100%;
+    max-width: 480px;        
+    margin: 0 auto;          
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+#seek-bar {
+    width: 100%;             
+    height: 6px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.time-display, 
+#volume-percentage {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em;
+    opacity: 0.75;
+    font-size: 0.8rem;
+}
+
+/* RIGHT SIDE VOLUME */
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 280px;      
+    min-width: 280px;
+    max-width: 280px;
+    justify-content: flex-end; 
+}
+
+#volume-percentage {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 35px; 
+}
+
+#volume-icon {
+    color: var(--text-color, #222222);
+    font-size: 26px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+#volume-btn:hover #volume-icon {
+    color: #00a884 !important;
+    transform: scale(1.15);
+}
+
+#volume-slider {
+    cursor: pointer;
+    margin: 0;          
+}
+
+button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+/* ==========================================
+    7. SCROLLBAR 
+   ========================================== */
+.content::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.content::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 20px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 20px;
+    border: 2px solid transparent; 
+    background-clip: padding-box;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+#up-next-list::-webkit-scrollbar,
+.info-panel::-webkit-scrollbar {
+    width: 6px; 
+}
+
+#up-next-list::-webkit-scrollbar-track,
+.info-panel::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+#up-next-list::-webkit-scrollbar-thumb,
+.info-panel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15); 
+    border-radius: 10px;
+}
+
+.dark-mode #up-next-list::-webkit-scrollbar-thumb,
+.dark-mode .info-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+    8. DARK MODE 
+   ========================================== */
+body.dark-mode {
+    --bg-color: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #bbbbbb;
+    --accent: #00ffcc; 
+    --scrollbar-track: rgba(255, 255, 255, 0.05); 
+    --scrollbar-thumb: rgba(255, 255, 255, 0.2);  
+    --scrollbar-hover: var(--accent);
+}
+
+.dark-mode .app-container { background: rgba(0, 0, 0, 0.4) !important; }
+
+.dark-mode .sidebar, 
+.dark-mode .info-panel, 
+.dark-mode .player-bar { 
+    background: rgba(0, 0, 0, 0.7) !important; 
+    border-color: #333;
+}
+
+.dark-mode .song-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.dark-mode .song-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dark-mode #bg-wallpaper {
+    filter: blur(25px) brightness(0.35); 
+}
+
+body.dark-mode .logo-text {
+    color: #ffffff;           
+}
+
+body.dark-mode .info-box p strong {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .info-box p span {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+body.dark-mode .next-title {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+body.dark-mode .next-artist {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .control-btn .material-symbols-outlined,
+.dark-mode #volume-icon {
+    color: #ffffff !important;
+}
+
+/* ==========================================
+    9. UTILITIES & LYRICS VIEW & ANIMATIONS
+   ========================================== */
+.hidden {
+    display: none !important;
+}
+
+#lyrics-toggle-btn.active-lyrics-mode span {
+    color: #00e5ff !important; 
+}
+
+#info-lyrics-view::-webkit-scrollbar {
+    width: 4px;
+}
+
+#info-lyrics-view::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.lyric-fade {
+    animation: lyricGlow 6s ease-in-out infinite;
+}
+
+@keyframes lyricGlow {
+    0%, 100% { 
+        opacity: 0.15; 
+        filter: blur(1px);
+    }
+    40%, 60% { 
+        opacity: 1; 
+        filter: blur(0px);
+    }
+}
+
+/* ==========================================
+    10. NOW PLAYING TRACK INDICATOR
+   ========================================== */
+.song-item.now-playing-track {
+    background: rgba(0, 121, 107, 0.15) !important; 
+    border-left: 5px solid var(--accent) !important; 
+    font-weight: 600;
+    transform: translateX(4px);
+}
+
+.song-item.now-playing-track::after {
+    content: " (Now Playing)";
+    font-size: 0.8rem;
+    color: var(--accent);
+    opacity: 0.85;
+    margin-left: auto; 
+    padding-right: 15px;
+    font-weight: 500;
+}
+
+.song-item.now-playing-track .song-actions {
+    margin-left: 0;
+}
+
+
+/* ==========================================
+    11. MOBILE (WIP)
+   ========================================== */
+
+@media (max-width: 768px) {
+    
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        box-shadow: none;
+    }
+    .sidebar .sidebar-section, .sidebar .sidebar-footer {
+        display: none; 
+    }
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+        margin: 0;
+        padding: 0;
+    }
+
+    
+    .info-panel {
+        display: none;
+    }
+
+    
+    .player-bar {
+        flex-direction: column; 
+        height: auto;
+        padding: 12px;
+        gap: 8px;
+        background: rgba(20, 20, 20, 0.95); 
+        backdrop-filter: blur(10px);
+    }
+
+
+    .now-playing {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .now-playing img {
+        width: 48px;
+        height: 48px;
+    }
+
+
+    .controls {
+        width: 100%;
+        max-width: 100%;
+    }
+    .controls .buttons {
+        gap: 24px; 
+    }
+    
+
+    .main-play-btn span {
+        font-size: 50px !important; 
+    }
+
+
+    .volume-container {
+        display: none; 
+    }
+}
